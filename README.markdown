@@ -14,7 +14,7 @@ let aMillionStyledStrings: [String] = aMillionUnstyledStrings.map {
 }
 
 let unstyledString = "Hello, world!"
-let styledString = unstyledString.applyingStyle(foreground: .black, background: .green, bold: true)
+let styledString = unstyledString.applying(foreground: .black, background: .green, bold: true)
 
 ```
 
