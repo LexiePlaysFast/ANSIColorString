@@ -14,53 +14,53 @@ public struct ANSIStyle: Sendable, Equatable {
     self.bold = bold
   }
 
-  var foregroundCode: String? {
+
+  fileprivate func render(code: UInt8...) -> String {
+    render(code: code)
+  }
+
+  fileprivate func render(code: any Sequence<UInt8>) -> String {
+    "\u{001B}[\(code.map(\.description).joined(separator: ";"))m"
+  }
+
+  var foregroundCode: [UInt8]? {
     if let foreground {
-      "\u{001B}[38;5;\(foreground.rawValue)m"
+      [38, 5, foreground.rawValue]
     } else {
       nil
     }
   }
 
-  var backgroundCode: String? {
+  var backgroundCode: [UInt8]? {
     if let background {
-      "\u{001B}[48;5;\(background.rawValue)m"
+      [48, 5, background.rawValue]
     } else {
       nil
     }
   }
 
-  var boldCode: String? {
-    if
-      let bold,
-      bold
-    {
-      "\u{001B}[1m"
-    } else {
-      nil
-    }
-  }
-
-  var unboldCode: String? {
-    if
-      let bold,
-      !bold
-    {
-      "\u{001B}[22m"
+  var boldCode: [UInt8]? {
+    if let bold {
+      if bold {
+        [1]
+      } else {
+        [22]
+      }
     } else {
       nil
     }
   }
 
   var head: String {
-    [
+    let code = [
       foregroundCode,
       backgroundCode,
       boldCode,
-      unboldCode,
     ]
       .compactMap { $0 }
       .joined()
+
+    return render(code: code)
   }
 
   var tail: String { Self.reset }

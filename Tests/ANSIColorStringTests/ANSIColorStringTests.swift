@@ -73,5 +73,5 @@ import ANSIColorString
   string.append(string: "bar", style: .init(foreground: .blue, bold: true))
   string.append(string: " baz")
 
-  #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4m\u{001B}[1mbar\u{001B}[0m\u{001B}[38;5;1m baz\u{001B}[0m")
+  #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4;1mbar\u{001B}[0m\u{001B}[38;5;1m baz\u{001B}[0m")
 }
