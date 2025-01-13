@@ -41,11 +41,37 @@ import ANSIColorString
   #expect(string == otherString)
 }
 
+@Test func styleContext() async throws {
+  let contextStyle1 = ANSIStyle(background: .red)
+  let contextStyle2 = ANSIStyle(foreground: .blue)
+  let realStyle = ANSIStyle(foreground: .green, bold: true)
+
+  #expect(realStyle.in(context: contextStyle1) == ANSIStyle(foreground: .green, background: .red, bold: true))
+  #expect(realStyle.in(context: contextStyle2) == ANSIStyle(foreground: .green, background:  nil, bold: true))
+}
+
 @Test func styledString() async throws {
   let style = ANSIStyle(foreground: .red)
 
-  let baseString = "test string"
-  let string = ANSIColorString(style: style, string: baseString)
+  var string: ANSIColorString = "test string"
+
+  #expect(string.description == "test string")
+
+  string.style = style
 
   #expect(string.description == "\u{001B}[38;5;1mtest string\u{001B}[0m")
+}
+
+@Test func embeddedString() async throws {
+  let style = ANSIStyle(foreground: .red)
+
+  var string: ANSIColorString = ""
+
+  string.style = style
+
+  string.append(string: "foo ")
+  string.append(string: "bar", style: .init(foreground: .blue, bold: true))
+  string.append(string: " baz")
+
+  #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4m\u{001B}[1mbar\u{001B}[0m\u{001B}[38;5;1m baz\u{001B}[0m")
 }

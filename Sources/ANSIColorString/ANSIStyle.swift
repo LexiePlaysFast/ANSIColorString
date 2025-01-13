@@ -41,8 +41,24 @@ public struct ANSIStyle: Sendable, Equatable {
     }
   }
 
+  var unboldCode: String? {
+    if
+      let bold,
+      !bold
+    {
+      "\u{001B}[22m"
+    } else {
+      nil
+    }
+  }
+
   var head: String {
-    [ foregroundCode, backgroundCode, boldCode ]
+    [
+      foregroundCode,
+      backgroundCode,
+      boldCode,
+      unboldCode,
+    ]
       .compactMap { $0 }
       .joined()
   }
@@ -52,8 +68,22 @@ public struct ANSIStyle: Sendable, Equatable {
   static let empty = Self()
   static let reset: String = "\u{001B}[0m"
 
-  func apply(to string: String) -> String {
-    "\(head)\(string)\(tail)"
+  func apply(to string: String, in context: Self? = nil) -> String {
+    if let context {
+      let contextualStyle = self.in(context: context)
+
+      return "\(contextualStyle.head)\(string)\(tail)\(context.head)"
+    } else {
+      return "\(head)\(string)\(tail)"
+    }
+  }
+
+  package func `in`(context: Self) -> Self {
+    Self(
+      foreground: self.foreground ?? context.foreground,
+      background: self.background ?? context.background,
+      bold: self.bold ?? context.bold
+    )
   }
 
 }
