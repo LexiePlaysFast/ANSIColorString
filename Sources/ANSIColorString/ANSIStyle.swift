@@ -15,31 +15,31 @@ public struct ANSIStyle: Sendable, Equatable {
   }
 
 
-  fileprivate func render(code: UInt8...) -> String {
+  fileprivate static func render(code: UInt8...) -> String {
     render(code: code)
   }
 
-  fileprivate func render(code: any Sequence<UInt8>) -> String {
+  fileprivate static func render(code: any Sequence<UInt8>) -> String {
     "\u{001B}[\(code.map(\.description).joined(separator: ";"))m"
   }
 
-  var foregroundCode: [UInt8]? {
+  var foregroundCode: [UInt8] {
     if let foreground {
       [38, 5, foreground.rawValue]
     } else {
-      nil
+      []
     }
   }
 
-  var backgroundCode: [UInt8]? {
+  var backgroundCode: [UInt8] {
     if let background {
       [48, 5, background.rawValue]
     } else {
-      nil
+      []
     }
   }
 
-  var boldCode: [UInt8]? {
+  var boldCode: [UInt8] {
     if let bold {
       if bold {
         [1]
@@ -47,26 +47,18 @@ public struct ANSIStyle: Sendable, Equatable {
         [22]
       }
     } else {
-      nil
+      []
     }
   }
 
   var head: String {
-    let code = [
-      foregroundCode,
-      backgroundCode,
-      boldCode,
-    ]
-      .compactMap { $0 }
-      .joined()
-
-    return render(code: code)
+    Self.render(code: [ foregroundCode, backgroundCode, boldCode ].joined())
   }
 
   var tail: String { Self.reset }
 
   static let empty = Self()
-  static let reset: String = "\u{001B}[0m"
+  static let reset: String = Self.render(code: 0)
 
   func apply(to string: String, in context: Self? = nil) -> String {
     if let context {
