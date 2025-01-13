@@ -29,7 +29,7 @@ import ANSIColorString
 
   #expect(style.foreground == .black)
   #expect(style.background == nil)
-  #expect(style.bold == false)
+  #expect(style.bold == nil)
 
   let baseString = "test string"
   let string = baseString.applying(style: style)

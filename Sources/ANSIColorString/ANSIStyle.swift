@@ -2,12 +2,12 @@ public struct ANSIStyle: Sendable, Equatable {
 
   public let foreground: ANSIColor?
   public let background: ANSIColor?
-  public let bold: Bool
+  public let bold: Bool?
 
   public init(
     foreground: ANSIColor? = nil,
     background: ANSIColor? = nil,
-    bold: Bool = false
+    bold: Bool? = nil
   ) {
     self.foreground = foreground
     self.background = background
@@ -31,7 +31,10 @@ public struct ANSIStyle: Sendable, Equatable {
   }
 
   var boldCode: String? {
-    if bold {
+    if
+      let bold,
+      bold
+    {
       "\u{001B}[1m"
     } else {
       nil
