@@ -47,9 +47,10 @@ public struct ANSIStyle: Sendable, Equatable {
       .joined()
   }
 
-  var tail: String { reset }
+  var tail: String { Self.reset }
 
-  let reset: String = "\u{001B}[0m"
+  static let empty = Self()
+  static let reset: String = "\u{001B}[0m"
 
   func apply(to string: String) -> String {
     "\(head)\(string)\(tail)"

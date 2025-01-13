@@ -40,3 +40,12 @@ import ANSIColorString
 
   #expect(string == otherString)
 }
+
+@Test func styledString() async throws {
+  let style = ANSIStyle(foreground: .red)
+
+  let baseString = "test string"
+  let string = ANSIColorString(style: style, string: baseString)
+
+  #expect(string.description == "\u{001B}[38;5;1mtest string\u{001B}[0m")
+}
