@@ -1,9 +1,9 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-public struct ANSIColorString {
+public struct ANSIColorString: Equatable {
 
-  enum Segment {
+  enum Segment: Equatable {
     case plain(string: String)
     case styled(as: ANSIStyle, string: String)
     case complex(string: ANSIColorString)
