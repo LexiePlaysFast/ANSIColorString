@@ -70,8 +70,8 @@ import ANSIColorString
   string.style = style
 
   string.append(string: "foo ")
-  string.append(string: "bar", style: .init(foreground: .blue, bold: true))
+  string.append(style: .init(foreground: .blue, bold: true), string: "bar")
   string.append(string: " baz")
 
-  #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4;1mbar\u{001B}[0m\u{001B}[38;5;1m baz\u{001B}[0m")
+  #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4;1mbar\u{001B}[38;5;1;22m baz\u{001B}[0m")
 }

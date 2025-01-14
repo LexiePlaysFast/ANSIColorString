@@ -65,7 +65,7 @@ public extension ANSIColorString {
     self.init(style: style, segments: [.plain(string: String(string))])
   }
 
-  mutating func append(string: any StringProtocol, style: ANSIStyle? = nil) {
+  mutating func append(style: ANSIStyle? = nil, string: any StringProtocol) {
     if let style {
       segments.append(.styled(as: style, string: String(string)))
     } else {

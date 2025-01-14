@@ -14,7 +14,6 @@ public struct ANSIStyle: Sendable, Equatable {
     self.bold = bold
   }
 
-
   fileprivate static func render(code: UInt8...) -> String {
     render(code: code)
   }
@@ -44,7 +43,7 @@ public struct ANSIStyle: Sendable, Equatable {
       if bold {
         [1]
       } else {
-        [22]
+        Self.boldResetCode
       }
     } else {
       []
@@ -52,19 +51,65 @@ public struct ANSIStyle: Sendable, Equatable {
   }
 
   var head: String {
-    Self.render(code: [ foregroundCode, backgroundCode, boldCode ].joined())
+    Self.render(
+      code: [
+        foregroundCode,
+        backgroundCode,
+        boldCode,
+      ]
+        .joined()
+    )
   }
 
   var tail: String { Self.reset }
 
+  func resetCode(to context: Self) -> some Sequence<UInt8> {
+    var resetSequence: [UInt8] = []
+
+    func appendResetOrContextSequence<T>(
+      fieldPath: KeyPath<Self,T?>,
+      contextSequencePath: KeyPath<Self,[UInt8]>,
+      resetSequencePath: KeyPath<Self,[UInt8]>
+    ) where T: Equatable {
+      if self[keyPath: fieldPath] != context[keyPath: fieldPath] {
+        resetSequence.append(contentsOf:
+          context[keyPath: fieldPath] == nil
+            ? self[keyPath: resetSequencePath]
+            : context[keyPath: contextSequencePath]
+        )
+      }
+    }
+
+    appendResetOrContextSequence(fieldPath: \.foreground, contextSequencePath: \.foregroundCode, resetSequencePath: \.foregroundResetCode)
+    appendResetOrContextSequence(fieldPath: \.background, contextSequencePath: \.backgroundCode, resetSequencePath: \.backgroundResetCode)
+
+    appendResetOrContextSequence(fieldPath: \.bold,       contextSequencePath: \.boldCode,       resetSequencePath: \.boldResetCode)
+
+    return resetSequence
+  }
+
+  func reset(to context: Self) -> String {
+    Self.render(code: resetCode(to: context))
+  }
+
   static let empty = Self()
   static let reset: String = Self.render(code: 0)
+
+  static let foregroundResetCode: [UInt8] = [39]
+  static let backgroundResetCode: [UInt8] = [49]
+
+  var foregroundResetCode: [UInt8] { Self.foregroundResetCode }
+  var backgroundResetCode: [UInt8] { Self.backgroundResetCode }
+
+  static let boldResetCode: [UInt8] = [22]
+
+  var boldResetCode: [UInt8] { Self.boldResetCode }
 
   func apply(to string: String, in context: Self? = nil) -> String {
     if let context {
       let contextualStyle = self.in(context: context)
 
-      return "\(contextualStyle.head)\(string)\(tail)\(context.head)"
+      return "\(contextualStyle.head)\(string)\(reset(to: context))"
     } else {
       return "\(head)\(string)\(tail)"
     }
