@@ -74,4 +74,5 @@ import ANSIColorString
   string.append(string: " baz")
 
   #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4;1mbar\u{001B}[38;5;1;22m baz\u{001B}[0m")
+  #expect(string.plainText == "foo bar baz")
 }

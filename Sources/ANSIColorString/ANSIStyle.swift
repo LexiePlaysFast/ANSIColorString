@@ -1,4 +1,4 @@
-public struct ANSIStyle: Sendable, Equatable, Hashable {
+public struct ANSIStyle: Sendable, Equatable, Hashable, Codable {
 
   public let foreground: ANSIColor?
   public let background: ANSIColor?

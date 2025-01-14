@@ -1,6 +1,6 @@
-public struct ANSIColorString: Sendable, Equatable, Hashable {
+public struct ANSIColorString: Sendable, Equatable, Hashable, Codable {
 
-  enum Segment: Equatable, Hashable {
+  enum Segment: Equatable, Hashable, Codable {
     case plain(string: String)
     case styled(as: ANSIStyle, string: String)
     case complex(string: ANSIColorString)
@@ -72,6 +72,23 @@ public extension ANSIColorString {
 
   mutating func append(string: Self) {
     segments.append(.complex(string: string))
+  }
+
+  var plainText: String {
+    var plainTextString = ""
+
+    for segment in segments {
+      switch segment {
+      case .plain(let string):
+        plainTextString.append(string)
+      case .styled(_, let string):
+        plainTextString.append(string)
+      case .complex(let complexString):
+        plainTextString.append(complexString.plainText)
+      }
+    }
+
+    return plainTextString
   }
 
 }
