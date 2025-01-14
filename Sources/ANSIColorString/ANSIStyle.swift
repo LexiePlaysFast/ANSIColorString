@@ -1,4 +1,4 @@
-public struct ANSIStyle: Sendable, Equatable {
+public struct ANSIStyle: Sendable, Equatable, Hashable {
 
   public let foreground: ANSIColor?
   public let background: ANSIColor?
@@ -13,6 +13,8 @@ public struct ANSIStyle: Sendable, Equatable {
     self.background = background
     self.bold = bold
   }
+
+  public static let empty = Self()
 
   fileprivate static func render(code: UInt8...) -> String {
     render(code: code)
@@ -92,7 +94,6 @@ public struct ANSIStyle: Sendable, Equatable {
     Self.render(code: resetCode(to: context))
   }
 
-  static let empty = Self()
   static let reset: String = Self.render(code: 0)
 
   static let foregroundResetCode: [UInt8] = [39]

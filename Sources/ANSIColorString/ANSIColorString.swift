@@ -1,9 +1,6 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+public struct ANSIColorString: Sendable, Equatable, Hashable {
 
-public struct ANSIColorString: Equatable {
-
-  enum Segment: Equatable {
+  enum Segment: Equatable, Hashable {
     case plain(string: String)
     case styled(as: ANSIStyle, string: String)
     case complex(string: ANSIColorString)
@@ -17,7 +14,7 @@ public struct ANSIColorString: Equatable {
 extension ANSIColorString: ExpressibleByStringLiteral {
 
   public init(stringLiteral: String) {
-    self.init(style: .empty, segments: [.plain(string: stringLiteral)])
+    self.init(string: stringLiteral)
   }
 
 }
@@ -61,7 +58,7 @@ extension ANSIColorString: CustomStringConvertible {
 
 public extension ANSIColorString {
 
-  init(style: ANSIStyle, string: any StringProtocol) {
+  init(style: ANSIStyle = .empty, string: any StringProtocol) {
     self.init(style: style, segments: [.plain(string: String(string))])
   }
 

@@ -1,4 +1,4 @@
-public struct ANSIColor: Sendable, Equatable {
+public struct ANSIColor: Sendable, Equatable, Hashable {
 
   package let rawValue: UInt8
 
