@@ -21,7 +21,7 @@ extension ANSIColorString: ExpressibleByStringLiteral {
 
 extension ANSIColorString: CustomStringConvertible {
 
-  func rendered(in context: ANSIStyle) -> String {
+  func rendered(in context: ANSIStyle? = nil) -> String {
     var renderedString = ""
 
     if style != ANSIStyle.empty {
@@ -39,19 +39,19 @@ extension ANSIColorString: CustomStringConvertible {
       }
     }
 
-    if style != ANSIStyle.empty {
-      renderedString.append(style.tail)
-    }
-
-    if context != .empty {
-      renderedString.append(context.head)
+    if let context {
+      renderedString.append(style.reset(to: context))
+    } else {
+      if style != ANSIStyle.empty {
+        renderedString.append(style.tail)
+      }
     }
 
     return renderedString
   }
 
   public var description: String {
-    rendered(in: ANSIStyle.empty)
+    rendered()
   }
 
 }
