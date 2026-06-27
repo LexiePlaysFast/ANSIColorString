@@ -76,3 +76,19 @@ import ANSIColorString
   #expect(string.description == "\u{001B}[38;5;1mfoo \u{001B}[38;5;4;1mbar\u{001B}[38;5;1;22m baz\u{001B}[0m")
   #expect(string.plainText == "foo bar baz")
 }
+
+@Test func brightenDarken() {
+  #expect(ANSIColor.brightBlue.darken  == ANSIColor.blue)
+  #expect(ANSIColor.blue.darken        == ANSIColor.blue)
+
+  #expect(ANSIColor.red.brighten       == ANSIColor.brightRed)
+  #expect(ANSIColor.brightRed.brighten == ANSIColor.brightRed)
+
+  #expect(ANSIColor.grayscale(intensity: 23).brighten == ANSIColor.grayscale(intensity: 23))
+  #expect(ANSIColor.grayscale(intensity: 22).brighten == ANSIColor.grayscale(intensity: 23))
+  #expect(ANSIColor.grayscale(intensity: 21).brighten == ANSIColor.grayscale(intensity: 22))
+
+  #expect(ANSIColor.grayscale(intensity: 2).darken == ANSIColor.grayscale(intensity: 1))
+  #expect(ANSIColor.grayscale(intensity: 1).darken == ANSIColor.grayscale(intensity: 0))
+  #expect(ANSIColor.grayscale(intensity: 0).darken == ANSIColor.grayscale(intensity: 0))
+}

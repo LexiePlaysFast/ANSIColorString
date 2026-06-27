@@ -74,4 +74,24 @@ public extension ANSIColor {
     return Self(rawValue: UInt8(232 + intensity))
   }
 
+  var brighten: Self {
+    if rawValue < 8 {
+      Self(rawValue: rawValue + 8)
+    } else if rawValue >= 232 && rawValue < 255 {
+      Self(rawValue: rawValue + 1)
+    } else {
+      self
+    }
+  }
+
+  var darken: Self {
+    if rawValue < 16, rawValue >= 8 {
+      Self(rawValue: rawValue - 8)
+    } else if rawValue > 232 {
+      Self(rawValue: rawValue - 1)
+    } else {
+      self
+    }
+  }
+
 }
