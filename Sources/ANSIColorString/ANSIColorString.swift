@@ -74,6 +74,14 @@ public extension ANSIColorString {
     segments.append(.complex(string))
   }
 
+  func appending(_ string: Self) -> Self {
+    .init(style: .empty, segments: [.complex(self), .complex(string)])
+  }
+
+  static func + (lhs: Self, rhs: Self) -> Self {
+    lhs.appending(rhs)
+  }
+
   var plainText: String {
     var plainTextString = ""
 
